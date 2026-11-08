@@ -47,9 +47,9 @@ img{max-width:100%;height:auto;display:block;border-radius:6px}
 #stage.ki #son{left:918px}
 #stage.ki #ctl{right:162px}
 #bot svg,#son svg{display:block;width:100%;height:100%;overflow:visible}
-#bubble,#tip{position:absolute;z-index:7;background:#fff1dd;border:1px solid #f0cf9f;border-radius:10px;padding:8px 12px;color:#4a2f0a;font-size:12.5px;line-height:1.4;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;transform:translateY(-4px)}
+#bubble,#tip{position:absolute;z-index:7;background:#fff1dd;border:1px solid #f0cf9f;border-radius:10px;padding:8px 12px;color:#4a2f0a;font-size:14.5px;line-height:1.4;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;transform:translateY(-4px)}
 #dock{position:absolute;right:8px;top:70px;z-index:7;display:flex;flex-direction:column;align-items:flex-end;gap:7px;max-width:330px}
-#bubble{--tr:64px;position:relative;z-index:60;width:max-content;max-width:330px}
+#bubble{--tr:64px;position:relative;z-index:60;width:max-content;max-width:380px}
 #ctl{transition:right .7s cubic-bezier(.3,.8,.3,1);position:absolute;right:122px;top:17px;z-index:7;display:flex;align-items:center;gap:2px;background:#eef3fa;border:1px solid #dfe6f0;border-radius:999px;padding:2px 6px}
 #ctl[hidden]{display:none}
 #ctl button{border:0;background:transparent;color:#3a4660;width:24px;height:24px;padding:0;border-radius:50%;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
@@ -403,7 +403,7 @@ bot.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.pr
 /* wipe */
 function wipe(){
   return new Promise(function(done){
-    var t0=null,dur=1000;bot.classList.add('erasing');
+    var t0=null,dur=500;bot.classList.add('erasing');
     function setMask(p){var v='linear-gradient(90deg,#000 0,#000 '+p+'%,transparent '+p+'%)';content.style.webkitMaskImage=v;content.style.maskImage=v}
     function step(t){
       if(t0===null)t0=t;var k=Math.min(1,(t-t0)/dur);var e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;setMask(Math.max(0,100-e*100));
@@ -745,7 +745,7 @@ function updCtl(){
     d.onclick=function(){go(j,j===idx+1?'play':'apply')};dots.appendChild(d);
   });
   dots.style.display=cs.length?'':'none';
-  cPrev.disabled=idx===0;
+  cPrev.disabled=idx<=2;
   var last=idx===r.length-1;
   cNext.disabled=(n==='env'&&!state.env)||(n==='dir'&&!state.dir);
   cNext.title=last?'Fertig':'Weiter';cNext.setAttribute('aria-label',cNext.title);cNext.innerHTML=(last?'Fertig':'Weiter')+(last?ICON.done:ICON.next);
@@ -873,7 +873,7 @@ async function playStep(n,tk){
 /* Steuerleiste */
 var ICON={prev:'<svg viewBox="0 0 16 16"><path d="M10 3L5 8l5 5"/></svg>',next:'<svg viewBox="0 0 16 16"><path d="M6 3l5 5-5 5"/></svg>',done:'<svg viewBox="0 0 16 16"><path d="M3 8.5l3.5 3.5L13 4.5"/></svg>'};
 function stepNext(){var r=route();if(r[idx]==='konten'&&pace!=='short')return;if(cNext.disabled)return;if(idx>=r.length-1)reset();else go(idx+1,'play')}
-function stepPrev(){if(idx>0)go(idx-1,'apply')}
+function stepPrev(){if(idx>2)go(idx-1,'apply')}
 function restartFlow(){fromRect=null;if(state.env&&state.dir)go(2,'play');else{state={env:null,dir:null};go(0,'play')}}
 cPrev.onclick=stepPrev;cNext.onclick=stepNext;cRst.onclick=restartFlow;cEnd.onclick=reset;
 document.addEventListener('keydown',function(e){
@@ -883,7 +883,7 @@ document.addEventListener('keydown',function(e){
 /* Start nach Klick auf den Vater */
 function start(p){
   pace=p||'long';busy=true;hideBubble();if(pace==='short')bot.classList.add('zz');
-  wait(650).then(function(){if(RM){content.classList.add('gone');return}return wipe()}).then(function(){return wait(300)}).then(function(){busy=false;go(0,'play')});
+  wait(650).then(function(){if(RM){content.classList.add('gone');return}return wipe()}).then(function(){return wait(300)}).then(function(){busy=false;var db=document.querySelector('#dirs button[aria-selected="true"]'),eb=document.querySelector('#content>.pane.on .sub button[aria-selected="true"]'),dk=db?db.dataset.d:'eingang',ek=eb?eb.dataset.e:'cloud';state={env:ENV.filter(function(o){return o.k===ek})[0]||ENV[0],dir:DIR.filter(function(o){return o.k===dk})[0]||DIR[0]};fromRect=null;go(2,'play')});
 }
 function reset(){
   token++;kill();setKi(false);engaged=false;busy=true;hideBubble();
