@@ -1262,6 +1262,7 @@ function landOff(){wigStop();stage.classList.remove('land');stage.classList.remo
 var ovInit=null,ovChg=false;
 function ovCheck(){
   if(content.classList.contains('ov'))ovTab(state.dir.k==='ausgang'?'aus':'ein');
+  if(fin)return;
   ovChg=!!ovInit&&(pace!==ovInit.pace||state.dir.k!==ovInit.dir||state.env.k!==ovInit.env);
   var t=ovChg?'Tour starten':'Weiter';cNext.innerHTML=t+ICON.next;cNext.title=t;cNext.setAttribute('aria-label',t);cNext.classList.toggle('go',ovChg);
   if(/^Wählen Sie oben/.test(ctext.textContent))ctext.textContent='Wählen Sie oben Art und Variante. Mit „'+t+'“ geht es los.';
@@ -1661,7 +1662,7 @@ function chipPop(step,chip){
 }
 function chipSet(step,o,chip){
   closePop();
-  if(ovMode()){
+  if(ovMode()||fin){
     if(step==='tour')pace=o.k;
     else if(step==='dir'){state.dir=o;var tb=document.querySelector('#dirs button[data-d='+o.k+']');if(tb)tb.click();if(state.env&&state.env.d&&state.env.d!==o.k){state.env=ENV[0];var ev=chips.querySelector('[data-s=env] span');if(ev)ev.textContent=ENV[0].t}}
     else state[step]=o;
