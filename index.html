@@ -455,6 +455,9 @@ img{max-width:100%;height:auto;display:block;border-radius:6px}
 #pbx .pr{border-bottom:1px solid #eef0f3;background:#fff}
 #pbx .pg{display:flex;align-items:center;height:25px;background:#eceef2;font-weight:600;font-size:12px;padding-left:12px;box-sizing:border-box;color:#333}
 .pf{position:absolute;z-index:7;height:24px;padding:0 11px;border-radius:12px;background:#fff;border:1px solid #f0b05a;box-shadow:0 3px 10px rgba(120,70,10,.22);font-size:11px;font-weight:600;color:#4a2f0a;display:flex;align-items:center;gap:5px;pointer-events:none;white-space:nowrap;transform-origin:left center}
+/* Übersicht: nie von Tour-Elementen überlagert */
+#stage.ov #pp,#stage:has(#content.fin) #pp,#stage.ov #awin,#stage.ov #xvd,#stage.ov #dskv,#stage.ov #hand,#stage.ov #hlP,#stage.ov #result,#stage.ov #ppL,#stage.ov #ppC,#stage.ov #ppD{display:none!important}
+#content.fin~#awin,#stage:has(#content.fin) #awin,#stage:has(#content.fin) #xvd,#stage:has(#content.fin) #dskv,#stage:has(#content.fin) #hand,#stage:has(#content.fin) #hlP{display:none!important}
 </style>
 </head>
 <body>
@@ -1452,7 +1455,7 @@ function ppHl(r,anim,pop){
   ppH.classList.remove('pop');if(pop&&!RM){void ppH.offsetWidth;ppH.classList.add('pop')}
 }
 function ppImg(k){ppA.style.opacity=k==='A'?1:0;ppB.style.opacity=k==='B'?1:0;ppC.style.opacity=(k==='C'||k==='D')?1:0;ppC.style.filter=k==='D'?'brightness(.78)':'none';ppD.style.opacity=k==='D'?1:0;ppH.classList.add('nd')}
-function ppShow(on){pp.style.display=on?'block':'none';pp.style.opacity=on?1:0;ppOn=on}
+function ppShow(on){if(on&&(stage.classList.contains('ov')||fin))on=false;pp.style.display=on?'block':'none';pp.style.opacity=on?1:0;ppOn=on}
 function ppHide(){ppShow(false);ppL.classList.remove('on');pwrSet(false)}
 function ppApply(n){var d=PP[n];if(!d)return;ppShow(true);ppImg(d.img);ppCam(d.cam,false);ppHl(d.hl[d.hl.length-1],false,false);ppL.classList.toggle('on',!!d.L)}
 function ppSync(n,pre){
