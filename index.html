@@ -1766,5 +1766,20 @@ peekLoop();sonLoop();sonVis();setInterval(sonVis,300);landOn();
 idle();
 })();
 </script>
+<script>
+  const sendHeight = () => {
+    window.parent.postMessage(
+      {
+        type: "iframe-height",
+        height: document.documentElement.scrollHeight
+      },
+      "*"
+    );
+  };
+
+  new ResizeObserver(sendHeight).observe(document.documentElement);
+
+  window.addEventListener("load", sendHeight);
+</script>
 </body>
 </html>
