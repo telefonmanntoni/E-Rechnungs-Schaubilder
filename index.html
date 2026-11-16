@@ -37,6 +37,7 @@ img{max-width:100%;height:auto;display:block;border-radius:6px}
 
 #chips{position:relative;display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px 20px;min-height:0;padding-right:190px}
 #chips[hidden]{display:none}
+#homeB{position:absolute;z-index:3;left:20px;width:34px;height:34px;padding:0;border-radius:50%;border:1px solid #9aa6c6;background:#eef1f7;color:#4a5a86;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s}#homeB[hidden]{display:none}#homeB:hover{background:#fff;color:#173f80;border-color:#5b9fe0}#homeB svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}#chips.hh{margin-left:64px}
 .chip{font:inherit;font-size:.9em;cursor:pointer;border:1px solid var(--bar);background:var(--tab);color:var(--fg);border-radius:999px;padding:5px 14px;display:inline-flex;gap:8px;align-items:baseline}
 .chip small{color:var(--muted);font-size:.82em;text-transform:uppercase;letter-spacing:.05em}
 .chip:hover{border-color:#3b7fd0}
@@ -465,6 +466,7 @@ img{max-width:100%;height:auto;display:block;border-radius:6px}
 <div class="head"><div><span class="dhint">Sie nutzen work4all Desktop? Dann gilt dieses Kapitel nicht. <span class="dl">Zum Desktop-Kapitel</span></span></div></div>
 
 <div id="lbub"></div>
+<button type="button" id="homeB" title="Zurück zum Anfang" aria-label="Zurück zum Anfang" hidden><svg viewBox="0 0 20 20"><path d="M3 9.5L10 3l7 6.5M5 8.5V16h3.5v-4.5h3V16H15V8.5"/></svg></button>
 <div id="chips" hidden></div>
 <div id="content">
 <button type="button" id="ovBack"></button>
@@ -1693,6 +1695,8 @@ function applyPend(){
 function stepNext(){if(kWaitRes){var kf_=kWaitRes;kWaitRes=null;cNext.disabled=true;kf_();return}if(forkWait){kiStart();return}if(fin){finHide();restartFlow();return}if(ovMode()&&!engaged){startFromOv();return}if(pend){applyPend();return}var r=route();if(r[idx]==='konten'&&pace!=='short')return;if(cNext.disabled)return;if(idx>=r.length-1){if(state.env&&state.env.k==='web'&&state.dir&&state.dir.k==='eingang'&&!kiAsked)offerKi();else finish()}else go(idx+1,'play')}
 function stepPrev(){if(busy)return;if(fin){go(idx,'apply');return}if(idx>0)go(idx-1,'apply');else reset()}
 function restartFlow(){fromRect=null;if(state.env&&state.dir)go(2,'play');else{state={env:null,dir:null};go(0,'play')}}
+var homeB=$('homeB');function homeSync(){var on=!chips.hidden;homeB.hidden=!on;chips.classList.toggle('hh',on);if(on){var c=chips.firstElementChild,ch=c?c.offsetHeight:28,ct=c?c.offsetTop:0;homeB.style.top=(chips.offsetTop+ct+(ch-34)/2)+'px'}}
+new MutationObserver(homeSync).observe(chips,{attributes:true,attributeFilter:['hidden'],childList:true});homeB.onclick=reset;window.addEventListener('resize',homeSync);window.addEventListener('load',function(){homeSync();setTimeout(homeSync,300)});if(document.fonts&&document.fonts.ready)document.fonts.ready.then(homeSync);
 cPrev.onclick=stepPrev;cNext.onclick=stepNext;cRst.onclick=restartFlow;cEnd.onclick=reset;
 document.addEventListener('keydown',function(e){
   if(!engaged||ctl.hidden)return;
